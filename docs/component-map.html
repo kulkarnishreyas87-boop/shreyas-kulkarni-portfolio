@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Portfolio Components Map</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: swimlane grid. Actors are rows; Trigger, Input, Context, Processing, AI, Output are columns. Dashed connectors are drawn over the grid. */
+:root{
+  --bg:#f6f7f9; --fg:#14213a; --muted:#5b6678; --line:#c9d0dc; --head:#14213a; --headfg:#f2f5fa; --card:#ffffff;
+  --l1:#e8f0fb; --l2:#fdf6dc; --l3:#e6f5ea; --l4:#fbe6ef; --l5:#e3f4f2; --l6:#e9e7f8; --l7:#fde9e1;
+  --b1:#3b73c9; --b2:#c99a1e; --b3:#2f9a52; --b4:#cf3f7c; --b5:#17897f; --b6:#6a5ac8; --b7:#d2603a;
+  --arrow:#14213a; --accent:#b3261e; --ok:#1f7a3a;
+  --sans:'IBM Plex Sans',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1521; --fg:#e7ebf3; --muted:#9aa5b8; --line:#2d3a52; --head:#1b2740; --headfg:#e7ebf3; --card:#18223a;
+  --l1:#13203a; --l2:#2a2512; --l3:#122a1c; --l4:#2e1522; --l5:#10292a; --l6:#1b1a38; --l7:#2e1b14;
+  --b1:#6f9eea; --b2:#e3b64a; --b3:#58c07a; --b4:#ee79a8; --b5:#4cc9bb; --b6:#9a8cf0; --b7:#f0875f;
+  --arrow:#aab6cf; --accent:#ff8a80; --ok:#58c07a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1521; --fg:#e7ebf3; --muted:#9aa5b8; --line:#2d3a52; --head:#1b2740; --headfg:#e7ebf3; --card:#18223a;
+  --l1:#13203a; --l2:#2a2512; --l3:#122a1c; --l4:#2e1522; --l5:#10292a; --l6:#1b1a38; --l7:#2e1b14;
+  --b1:#6f9eea; --b2:#e3b64a; --b3:#58c07a; --b4:#ee79a8; --b5:#4cc9bb; --b6:#9a8cf0; --b7:#f0875f;
+  --arrow:#aab6cf; --accent:#ff8a80; --ok:#58c07a; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);margin:0;padding-inline:16px;padding-block:24px 48px;font-size:14px;line-height:1.45}
+.wrap{max-width:1380px;margin:0 auto}
+h1{font-size:22px;margin:0 0 4px;text-wrap:balance}
+.sub{color:var(--muted);margin:0 0 18px;max-width:88ch}
+.scroll{overflow-x:auto;border-radius:8px;border:1px solid var(--line)}
+.map{position:relative;display:grid;grid-template-columns:124px repeat(6,minmax(176px,1fr));min-width:1280px;background:var(--card)}
+.h{background:var(--head);color:var(--headfg);font-weight:600;text-align:center;padding:14px 6px;font-size:13px;letter-spacing:.04em;text-transform:uppercase}
+.actor{background:var(--head);color:var(--headfg);font-weight:600;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:10px 8px;border-top:1px solid var(--line)}
+.actor small{font-weight:400;opacity:.8;font-size:12px}
+.cell{display:flex;flex-direction:column;justify-content:center;gap:14px;padding:18px 12px;min-height:104px;border-left:1px dashed var(--line)}
+.r2{background:var(--l1)}.r3{background:var(--l2)}.r4{background:var(--l3)}.r5{background:var(--l4)}.r6{background:var(--l5)}.r7{background:var(--l6)}.r8{background:var(--l7)}
+.box{position:relative;z-index:2;background:var(--card);border:2px solid var(--bc);border-radius:8px;padding:9px 10px;font-size:12.5px;line-height:1.38;text-align:center}
+.box b{font-weight:600}
+.box code{font-family:var(--mono);font-size:11px}
+.box.left{text-align:left}
+.b2{--bc:var(--b1)}.b3{--bc:var(--b2)}.b4{--bc:var(--b3)}.b5{--bc:var(--b4)}.b6{--bc:var(--b5)}.b7{--bc:var(--b6)}.b8{--bc:var(--b7)}
+svg.wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3;overflow:visible}
+svg.wires path{fill:none;stroke:var(--arrow);stroke-width:1.5;stroke-dasharray:5 4}
+svg.wires polygon{fill:var(--arrow)}
+.lbl{font-family:var(--mono);font-size:10.5px;fill:var(--accent)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px;margin-top:24px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:16px;min-width:0}
+.card h2{font-size:12px;margin:0 0 10px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-family:var(--mono)}
+.card p{margin:0 0 8px}.card ul,.card ol{margin:0;padding-left:20px}.card li{margin-bottom:6px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+td code,li code{font-family:var(--mono);font-size:11.5px}
+.tw{overflow-x:auto}
+.wide{grid-column:1/-1}
+.tree{font-family:var(--mono);font-size:12px;line-height:1.6;white-space:pre;overflow-x:auto;margin:0}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Shreyas Kulkarni, Portfolio Site: Components Map (plan)</h1>
+<p class="sub">A portfolio site for the six projects in GitHub account <b>kulkarnishreyas87-boop</b>. Neon (Postgres) is the system of record for every project, its stack, highlights, media and repo facts. A daily sync reads GitHub and keeps the facts fresh. Gemini only drafts write-ups from READMEs, and nothing is published until I approve it in the admin page. The public site reads only from Neon. This is a map only: nothing on it is built yet.</p>
+
+<div class="scroll"><div class="map" id="map">
+  <div class="h">Actor</div><div class="h">Trigger</div><div class="h">Input</div><div class="h">Context</div><div class="h">Processing</div><div class="h">AI</div><div class="h">Output</div>
+
+  <!-- Visitor -->
+  <div class="actor">Visitor<small>(Recruiter, hiring manager)</small></div>
+  <div class="cell r2"><div class="box b2" id="v1">Opens the link from my CV, LinkedIn or GitHub bio. Often on a phone, often for under two minutes.</div></div>
+  <div class="cell r2"></div><div class="cell r2"></div><div class="cell r2"></div><div class="cell r2"></div>
+  <div class="cell r2"><div class="box b2" id="v2">Sees who I am, six shipped projects with live demos and a component map for each. One tap to the live app, the repo, or the contact form.</div></div>
+
+  <!-- Site -->
+  <div class="actor">Portfolio site<small>(Next.js on Vercel)</small></div>
+  <div class="cell r3"></div>
+  <div class="cell r3"><div class="box b3" id="s1">Page request: <code>/</code>, <code>/projects</code>, <code>/projects/[slug]</code> or <code>/about</code>.</div></div>
+  <div class="cell r3"></div>
+  <div class="cell r3"><div class="box b3" id="s2">Server components read <b>published</b> rows from Neon. Pages are cached (ISR) and refreshed on demand when I publish. Tech filters run in the browser.</div></div>
+  <div class="cell r3"></div>
+  <div class="cell r3"><div class="box b3 left" id="s3"><b>Components:</b> Navbar · Hero · FeaturedProject · TechFilter · ProjectGrid › ProjectCard · ProjectDetail › CaseStudy, ArchitectureMap, Highlights, Gallery, LinksBar · StackStrip · ContactForm · Footer</div></div>
+
+  <!-- Neon -->
+  <div class="actor">Neon<small>(Postgres, system of record)</small></div>
+  <div class="cell r4"></div><div class="cell r4"></div>
+  <div class="cell r4"><div class="box b4 left" id="n1"><b>Neon tables:</b> projects · technologies · project_technologies · highlights · media · repo_snapshots · drafts · contact_messages · sync_runs</div></div>
+  <div class="cell r4"></div><div class="cell r4"></div><div class="cell r4"></div>
+
+  <!-- Contact -->
+  <div class="actor">Contact API<small>(Route handler)</small></div>
+  <div class="cell r5"></div>
+  <div class="cell r5"><div class="box b5" id="a1">The ContactForm posts name, email and message to <code>/api/contact</code>.</div></div>
+  <div class="cell r5"></div>
+  <div class="cell r5"><div class="box b5" id="a2">Zod validation, length limits, a hidden honeypot field, 5 messages per hour per address. Saved to Neon first.</div></div>
+  <div class="cell r5"></div>
+  <div class="cell r5"><div class="box b5" id="a3">Email to me through <b>Resend</b>, with reply-to set to the sender. If the send fails, the message is still in Neon.</div></div>
+
+  <!-- Owner -->
+  <div class="actor">Owner<small>(Me, /admin)</small></div>
+  <div class="cell r6"><div class="box b6" id="o1">I ship a new repo, update a README, or want to change the copy.</div></div>
+  <div class="cell r6"><div class="box b6" id="o2"><code>/admin</code> with a password and a signed HttpOnly cookie. Lists drafts waiting for review.</div></div>
+  <div class="cell r6"></div>
+  <div class="cell r6"><div class="box b6" id="o3">Review or edit the draft, set featured and order, hide a repo, add screenshots and the component map. <b>Publish</b> writes to Neon and refreshes the pages.</div></div>
+  <div class="cell r6"></div><div class="cell r6"></div>
+
+  <!-- Sync -->
+  <div class="actor">GitHub sync<small>(Vercel Cron)</small></div>
+  <div class="cell r7"><div class="box b7" id="j1">Vercel Cron runs daily at 02:00 UTC. A <b>Sync now</b> button in /admin runs it at once.</div></div>
+  <div class="cell r7"><div class="box b7" id="j2"><b>GitHub API:</b> public repos, README, languages, package.json or pyproject, last commit, homepage URL, <code>docs/component-map.png</code>.</div></div>
+  <div class="cell r7"></div>
+  <div class="cell r7"><div class="box b7" id="j3">Maps dependencies to stack tags (next → Next.js, pg → Postgres). Compares the README hash with the stored one. Only a changed README goes to Gemini. Never overwrites fields I edited by hand.</div></div>
+  <div class="cell r7"></div><div class="cell r7"></div>
+
+  <!-- Gemini -->
+  <div class="actor">Gemini Flash<small>(Draft writer)</small></div>
+  <div class="cell r8"></div><div class="cell r8"></div>
+  <div class="cell r8"><div class="box b8" id="g1">Writing rules, the JSON schema, and my approved write-ups as style examples.</div></div>
+  <div class="cell r8"></div>
+  <div class="cell r8"><div class="box b8" id="g2">Reads the changed README. Returns strict JSON: tagline, problem, approach, 3 to 5 highlights, stack. Saved as a <b>draft</b>, never live.</div></div>
+  <div class="cell r8"></div>
+
+  <svg class="wires" id="wires" aria-hidden="true"></svg>
+</div></div>
+
+<div class="cards">
+  <div class="card wide"><h2>Projects going in (from GitHub)</h2><div class="tw"><table>
+    <tr><th>Project</th><th>Repo</th><th>What it does</th><th>Stack tags</th><th>Live</th></tr>
+    <tr><td><b>Pulse-AI</b></td><td><code>pulse-ai</code></td><td>Weekly AI/ML research brief by domain: arXiv ingest, Gemini scoring and verification, emailed every Monday</td><td>Next.js 15, TypeScript, Gemini Flash, Neon, Vercel Cron, Resend, Zod</td><td>pulse-ai-brief.vercel.app</td></tr>
+    <tr><td><b>Aangan phone agent</b></td><td><code>aangan-agent</code></td><td>Voice agent that answers an interior studio's calls, qualifies leads and books consultations</td><td>Node 22, WebSockets, Vaani, Gemini, Neon, Resend, HubSpot, Cal.com</td><td>aangan-agent-one.vercel.app</td></tr>
+    <tr><td><b>Kargo hiring dashboard</b></td><td><code>kargo-hiring-dashboard</code></td><td>CV shortlist scored against past hires, with guardrail review, interview briefs and email drafts</td><td>Next.js 16, TypeScript, Tailwind, Gemini, Neon, Resend</td><td>kargo-hiring-two.vercel.app (password)</td></tr>
+    <tr><td><b>Skinstinct Draft Lab</b></td><td><code>Meera-LinkedIn-Post-Generator</code></td><td>Telegram notes turned into founder-voice LinkedIn drafts with real news angles. Drafts only, never posts</td><td>Python, Telegram Bot, Gemini with Search grounding, SQLite, Pydantic</td><td>meera-linked-in-post-generator.vercel.app</td></tr>
+    <tr><td><b>Settle the Trip</b></td><td><code>Trip_Planner_MRS</code></td><td>Group trip decider: dealbreakers kept apart from preferences, deterministic engine, no auto-pick</td><td>JavaScript, Supabase, Gemini (optional), Vercel</td><td>settle-the-trip.vercel.app</td></tr>
+    <tr><td><b>Match Night</b></td><td><code>FlixMatch</code></td><td>Two people swipe a Gemini-built movie pool. A mutual like reveals the match with India OTT links</td><td>Next.js 16, TypeScript, Supabase Realtime, Gemini, TMDB, RapidAPI, Framer Motion</td><td>No live URL yet</td></tr>
+  </table></div></div>
+
+  <div class="card wide"><h2>Page and component tree</h2>
+<pre class="tree">app/
+├─ layout.tsx ............ Navbar, Footer, theme toggle (light and dark)
+├─ page.tsx  (/) ......... Hero ─ name, role, one line, CV and GitHub links
+│                         FeaturedProject ─ projects.featured = true, with live preview image
+│                         ProjectGrid › ProjectCard × n ─ title, tagline, stack chips, live badge
+│                         StackStrip ─ technologies with a count of projects using each
+│                         ContactForm ─ POST /api/contact
+├─ projects/page.tsx ..... TechFilter (client) + ProjectGrid, filter by stack tag or type
+├─ projects/[slug]/page.tsx
+│                         CaseStudy ─ problem, approach, my role, what I would do next
+│                         ArchitectureMap ─ media.kind = 'component_map' (image or embedded HTML)
+│                         Highlights ─ highlights ordered by sort
+│                         Gallery ─ media.kind = 'screenshot'
+│                         LinksBar ─ live URL, repo, stars, last commit (repo_snapshots)
+├─ about/page.tsx ........ Bio, timeline, skills grouped by technologies.category
+├─ admin/ ................ Login, DraftReview, ProjectEditor, MediaUpload, SyncNowButton
+└─ api/
+   ├─ contact/route.ts ... Validate, store in contact_messages, email through Resend
+   ├─ sync/route.ts ...... Cron only (CRON_SECRET): GitHub → Neon, Gemini drafts
+   └─ revalidate/route.ts  Admin only: refresh cached pages after publish</pre></div>
+
+  <div class="card"><h2>What Neon holds</h2><div class="tw"><table>
+    <tr><th>Table</th><th>Key columns</th></tr>
+    <tr><td>projects</td><td>slug, repo_name, title, tagline, problem, approach, role, live_url, repo_url, featured, sort_order, status (draft, published, hidden), edited_fields</td></tr>
+    <tr><td>technologies</td><td>name, category (frontend, backend, database, AI, infra, integration)</td></tr>
+    <tr><td>project_technologies</td><td>project_id, technology_id</td></tr>
+    <tr><td>highlights</td><td>project_id, kind (feature, decision, metric), text, sort</td></tr>
+    <tr><td>media</td><td>project_id, kind (screenshot, component_map, video), url, alt, sort</td></tr>
+    <tr><td>repo_snapshots</td><td>project_id, stars, languages (jsonb), last_commit_at, readme_sha, fetched_at</td></tr>
+    <tr><td>drafts</td><td>project_id, source_readme_sha, payload (jsonb), status (pending, approved, rejected)</td></tr>
+    <tr><td>contact_messages</td><td>name, email, message, ip_hash, emailed_at, created_at</td></tr>
+    <tr><td>sync_runs</td><td>started_at, finished_at, repos_seen, repos_changed, error</td></tr>
+  </table></div></div>
+
+  <div class="card"><h2>One sync, step by step</h2><ol>
+    <li>Cron (or Sync now) calls <code>/api/sync</code> with the cron secret. A <code>sync_runs</code> row is opened.</li>
+    <li>The GitHub API lists public repos. A new repo becomes a hidden project row, so nothing appears without my say.</li>
+    <li>For each repo: stars, languages, last commit and homepage go into <code>repo_snapshots</code>. Dependencies become stack tags.</li>
+    <li>If the README hash changed, Gemini writes a draft into <code>drafts</code>. Otherwise no AI call is made.</li>
+    <li>I open /admin, review or edit the draft and publish. Neon is updated and the pages are refreshed.</li>
+  </ol></div>
+
+  <div class="card"><h2>Why this shape</h2><ul>
+    <li><b>Neon as the single source.</b> The site never calls GitHub or Gemini while a visitor waits, so pages load fast and keep working if either is down.</li>
+    <li><b>Gemini drafts, I publish.</b> The write-ups speak for me to recruiters, so nothing AI-written goes live unread. Same rule as Skinstinct Draft Lab.</li>
+    <li><b>Hand edits win.</b> <code>edited_fields</code> records what I changed, and the sync never overwrites those fields.</li>
+    <li><b>Facts stay fresh by themselves.</b> Stars, last commit and stack update daily with no work from me.</li>
+    <li><b>Same stack as my recent work:</b> Next.js, Neon, Gemini, Resend and Vercel Cron, as in Pulse-AI.</li>
+  </ul></div>
+
+  <div class="card wide"><h2>Open questions before building</h2><ul>
+    <li><b>Kargo dashboard</b> sits behind a password. Show a screenshot tour instead of the live link, or share a demo password?</li>
+    <li><b>Match Night</b> has no live URL. Deploy it first, or list it with screenshots and the repo only?</li>
+    <li><b>Featured project:</b> Aangan phone agent (most complete system) or Pulse-AI (fully live and public)?</li>
+    <li><b>Domain:</b> a custom domain, or <code>*.vercel.app</code> for now?</li>
+    <li><b>About page:</b> photo, short bio, CV PDF, and which links (LinkedIn, email, GitHub)?</li>
+    <li><b>Contact form email:</b> which inbox should messages go to?</li>
+    <li><b>Private repos:</b> only the six public repos are on the map. Should any private ones be included, as write-ups with no code link?</li>
+  </ul></div>
+</div>
+</div>
+
+<script>
+(function(){
+  // [from, to, type, dx, label]. Types: e = elbow through the gutter to the right, u/d = straight up/down,
+  // ur = up then right, ul = up then left, lu = left then up (dx shifts the vertical run so parallel arrows stay apart)
+  var edges=[
+    ["v1","s1","e"],["s1","s2","e"],["n1","s2","ur",0,"read published"],["s2","s3","e"],["s3","v2","u"],
+    ["a1","a2","e"],["a2","n1","lu",-28],["a2","a3","e"],
+    ["o1","o2","e"],["o2","o3","e"],["o3","n1","lu",0,"publish"],
+    ["j1","j2","e"],["j2","j3","e"],["j3","n1","lu",28,"repo facts"],["j3","g2","e"],["g1","g2","e"],
+    ["g2","n1","ul",0,"draft"]
+  ];
+  function draw(){
+    var m=document.getElementById("map"),svg=document.getElementById("wires");
+    var mr=m.getBoundingClientRect();
+    svg.setAttribute("viewBox","0 0 "+mr.width+" "+mr.height);
+    var out="";
+    function R(id){var r=document.getElementById(id).getBoundingClientRect();return{l:r.left-mr.left,r:r.right-mr.left,t:r.top-mr.top,b:r.bottom-mr.top,cx:(r.left+r.right)/2-mr.left,cy:(r.top+r.bottom)/2-mr.top}}
+    function head(x,y,dir){
+      if(dir==="r")return '<polygon points="'+x+','+y+' '+(x-8)+','+(y-4)+' '+(x-8)+','+(y+4)+'"/>';
+      if(dir==="l")return '<polygon points="'+x+','+y+' '+(x+8)+','+(y-4)+' '+(x+8)+','+(y+4)+'"/>';
+      if(dir==="d")return '<polygon points="'+x+','+y+' '+(x-4)+','+(y-8)+' '+(x+4)+','+(y-8)+'"/>';
+      return '<polygon points="'+x+','+y+' '+(x-4)+','+(y+8)+' '+(x+4)+','+(y+8)+'"/>';
+    }
+    function label(x,y,t,anchor){return '<text class="lbl" text-anchor="'+(anchor||"start")+'" x="'+x+'" y="'+y+'">'+t+'</text>'}
+    edges.forEach(function(e){
+      var a=R(e[0]),b=R(e[1]),t=e[2],dx=e[3]||0,lab=e[4],d,h,x;
+      if(t==="u"){d="M"+a.cx+","+a.t+" L"+b.cx+","+(b.b+1);h=head(b.cx,b.b,"u")}
+      else if(t==="d"){d="M"+a.cx+","+a.b+" L"+b.cx+","+(b.t-1);h=head(b.cx,b.t,"d")}
+      else if(t==="ur"){d="M"+a.cx+","+a.t+" L"+a.cx+","+b.cy+" L"+(b.l-1)+","+b.cy;h=head(b.l,b.cy,"r");
+        if(lab)out+=label(a.cx+6,(a.t+b.cy)/2+20,lab)}
+      else if(t==="ul"){d="M"+a.cx+","+a.t+" L"+a.cx+","+b.cy+" L"+(b.r+1)+","+b.cy;h=head(b.r,b.cy,"l");
+        if(lab)out+=label(a.cx+6,a.t-14,lab)}
+      else if(t==="lu"){x=b.cx+dx;var y=a.t+14; // leave from the top of the box so it never overlaps the arrow coming in at the centre
+        d="M"+a.l+","+y+" L"+x+","+y+" L"+x+","+(b.b+1);h=head(x,b.b,"u");
+        if(lab)out+=label((a.l+x)/2,y-6,lab,"middle")}
+      else{var mx=(a.r+b.l)/2;d="M"+a.r+","+a.cy+" L"+mx+","+a.cy+" L"+mx+","+b.cy+" L"+(b.l-1)+","+b.cy;h=head(b.l,b.cy,"r")}
+      out+='<path d="'+d+'"/>'+h;
+    });
+    svg.innerHTML=out;
+  }
+  window.addEventListener("resize",draw);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
+  draw();
+})();
+</script>
+</body>
+</html>
